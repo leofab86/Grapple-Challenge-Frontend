@@ -1,0 +1,28 @@
+Api::MatchesController
+  GET /api/matches
+    with empty params
+      returns matches: [{id: int, name: string, participants: {user}},...]
+      returns 200
+  POST /api/matches
+    with params: {name: 'Match Name', user_id: user.id, users_matches_attributes: [{user_id: user.id},...]}
+      returns a new match: {id, name, user_id, participants:[{id, email, invite_status:string},...]}
+      creates a new match
+      returns 201
+      sends an invite from the creator to the opponent
+  GET /api/matches/:id
+    returns match json: {id: integer, name: string, ruleset: ... , participants: [user,...]}
+  PUT /api/matches/:id
+    updates a match when passed: {name: string, ruleset: string, city: string, state: string}
+    returns 200
+
+Api::UsersController
+  GET /api/users
+    with empty params
+      returns json: [{id: int, name: string, email: string}, ...]
+      returns 200
+  GET /api/users/:id
+    returns json: {user: {id: int, name: string, email: string, affiliation: string, rank: string, weight: float}}
+    returns 200
+  PUT /api/users/:id
+    updates user when passed: {user: {affiliation:...}}
+    returns 200
