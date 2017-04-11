@@ -1,7 +1,7 @@
 import React, { PropTypes as is } from 'react';
 import { Link } from 'react-router';
 
-import {ReactComponent, renderLogging, stateTracker, updateReports} from '../../config';
+const {ReactComponent, renderLogging} = window.GCCONF.client;
 import chainHOC from '../helpers/chainHOC';
 import AccountPage from './accountPage';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import {ReactComponent, stateTracker, renderLogging, updateReports} from '../../../config';
+const {ReactComponent, renderLogging} = window.GCCONF.client;
 import cookie from 'react-cookie';
 import ajax from '../../helpers/ajax';
 import chainHOC from '../../helpers/chainHOC';

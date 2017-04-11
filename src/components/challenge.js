@@ -1,5 +1,5 @@
 import React, { PropTypes as is } from 'react';
-import {ReactComponent, routerType, stateTracker, renderLogging, updateReports} from '../../config';
+const {ReactComponent, routerType, renderLogging} = window.GCCONF.client;
 import chainHOC from '../helpers/chainHOC';
 
 
@@ -15,6 +15,7 @@ Challenge.propTypes = {
 
 function Challenge (props) {
 	if(renderLogging) console.log('RENDERING GenericComponent');
+	
 	const mySavedMatch = (props.urlMatchId == props.matchId) ? true : false;
 	const userMatch = true;
 

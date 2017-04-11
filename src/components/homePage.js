@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 
-import {ReactComponent, routerType, renderLogging, stateTracker, updateReports} from '../../config';
+const {ReactComponent, routerType, renderLogging} = window.GCCONF.client;
 import chainHOC from '../helpers/chainHOC';
 
 

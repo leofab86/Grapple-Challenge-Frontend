@@ -20,7 +20,7 @@ module.exports = {
 	updateReports: {update:false, pass:false},
 	renderLogging: false,
 	renderLoggingInputs: false,
-	ajaxLogging: true,
+	ajaxLogging: false,
 
 	stateTracker: false,
 	reduxDevtools: false

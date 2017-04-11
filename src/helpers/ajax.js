@@ -1,5 +1,5 @@
 //JQuery loaded by rails?? or another module?...
-import { ajaxLogging } from '../../config';
+const { ajaxLogging } = window.GCCONF.client;
 
 function generateMethod (type) {
 	return (url, headers, data) => {

@@ -2,7 +2,7 @@ import React, { PropTypes as is } from 'react';
 import {Typeahead} from 'react-bootstrap-typeahead';
 
 import validator from '../helpers/validator';
-import {ReactComponent, renderLogging, stateTracker, updateReports} from '../../config';
+const {ReactComponent, renderLogging} = window.GCCONF.client;
 import TextInput from './common/textInput';
 import chainHOC from '../helpers/chainHOC';
 import { accountInputs, inputs2State, renderInputs } from './common/accountSettings';

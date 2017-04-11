@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as AppActions from '../actions/reduxActions';
-const {ReactComponent, renderLogging, stateTracker, updateReports} = document.devConfig;
+const {ReactComponent, renderLogging, stateTracker} = window.GCCONF.client;
 import Header from '../components/header';
 import GlobalPopup from '../components/globalPopup';
 import StateTracker from '../stateTracker/stateTracker';

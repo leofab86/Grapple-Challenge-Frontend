@@ -1,6 +1,6 @@
 import React from 'React';
 
-import {updateReports, ReactComponent} from '../../../config';
+const {updateReports, ReactComponent} = window.GCCONF.client;
 
 
 export function updateReporterII (WrappedComponent) {

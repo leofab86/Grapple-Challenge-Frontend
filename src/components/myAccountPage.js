@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 
-import {ReactComponent, stateTracker, renderLogging, updateReports} from '../../config';
+const {ReactComponent, renderLogging} = window.GCCONF.client;
 import chainHOC from '../helpers/chainHOC';
 import { toastrMsg } from '../helpers/appHelpers';
 import { accountInputs, inputs2State, renderInputs } from './common/accountSettings';
@@ -18,10 +18,12 @@ class MyAccountPage extends ReactComponent{
 		asyncEditUser: is.func.isRequired
 	};
 
-	constructor (props) {
-		super();
-		const { name, email, weight, affiliation, rank } = props;
-		this.state = {...inputs2State(accountInputs), name, email, weight, affiliation, rank}
+	state = {...inputs2State(accountInputs),
+		name: this.props.name,
+		email: this.props.email,
+		weight: this.props.weight,
+		affiliation: this.props.affiliation,
+		rank: this.props.rank
 	}
 
 	inputHandler = (input, event) => {

@@ -24,7 +24,7 @@ export function II (WrappedComponent) {
 }
 
 
-//-----------------------Props Proxy: When no state necessary, put these at the end of the HOC chain---------------
+//-----------------------Props Proxy: When no state necessary-----------------------------
 
 export function PP (WrappedComponent) {
 

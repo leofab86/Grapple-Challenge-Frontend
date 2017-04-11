@@ -4,7 +4,7 @@ import cookie from 'react-cookie';
 import ajax from '../../helpers/ajax';
 import { errorHandler } from '../../helpers/appHelpers';
 import { updateHeaders } from '../../actions/authActions';
-import {ReactComponent, stateTracker, renderLogging, updateReports} from '../../../config';
+const {ReactComponent, renderLogging} = window.GCCONF.client;
 import chainHOC from '../../helpers/chainHOC';
 
 function Test (props) {

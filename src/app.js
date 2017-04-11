@@ -5,7 +5,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import { Router, Route, IndexRoute } from 'react-router';
 
-const {routerType, renderLogging, reduxDevtools} = document.devConfig;
+const {routerType, renderLogging, reduxDevtools} = window.GCCONF.client;
 import {AUTH, POPUP, CHALLENGE, MATCHES_GET, MATCHES_ADD} from './actions/constants';
 import { newSession, storeMatches } from './actions/reduxActions';
 import { getMatches } from './actions/apiActions';

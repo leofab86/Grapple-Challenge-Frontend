@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 
-import {ReactComponent, routerType, renderLogging, stateTracker, updateReports, debugging} from '../../config';
+const {ReactComponent, routerType, renderLogging} = window.GCCONF.client;
 import Login from './loginForm';
 import MyAccountContainer from '../containers/myAccountContainer';
 import Tabs from './common/tabs';

@@ -1,6 +1,6 @@
 import stateTrackerHOC from '../stateTracker/stateTrackerHOC';
 import { updateReporterII, updateReporterPP } from '../components/common/updateReporterHOC';
-import { stateTracker, updateReports } from '../../config'
+const { stateTracker, updateReports } = window.GCCONF.client;
 
 export default function(baseComponent, HOCarray) {
 	let HOCchain = baseComponent;

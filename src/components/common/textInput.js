@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 
-import {ReactComponent, renderLoggingInputs} from '../../../config';
+const {ReactComponent, renderLoggingInputs} = window.GCCONF.client;
 
 
 class Input extends ReactComponent{

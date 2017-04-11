@@ -1,7 +1,7 @@
 import cookie from 'react-cookie';
 import querystring from 'querystring';
 
-import { ajaxLogging } from '../../config';
+const { ajaxLogging } = window.GCCONF.client;
 import ajax from '../helpers/ajax';
 import { toastrMsg, errorHandler } from '../helpers/appHelpers';
 
@@ -9,19 +9,28 @@ export function updateHeaders (xhr, action) {
 	const newToken = xhr.getResponseHeader('access-token');
 	if (newToken === null) return;
 	let badTokens = cookie.load('badTokens');
-	if (!badTokens) {
+
+	if (badTokens && badTokens[action] == newToken) {
+		if(ajaxLogging) console.log('BAD TOKEN!'); return;
+	
+	} else if (!badTokens) {
 		if(ajaxLogging) console.log('FIRST TIME, STARTING BATCH TIMER');
 		cookie.save('batchTimer', {}, { path: '/', maxAge: 5 });
 		badTokens = {};
-	} else if (badTokens[action] == newToken) {
-		if(ajaxLogging) console.log('BAD TOKEN!'); return;
+
+	} else if (action == 'authenticate' && !badTokens['authenticate']) {
+		if(ajaxLogging) console.log('NEW AUTHENTICATE, STARTING BATCH TIMER');
+		cookie.save('batchTimer', {}, { path: '/', maxAge: 5 });
+	
 	} else if (cookie.load('batchTimer')) {
 		console.log('BATCH TIMER, SAVING BAD TOKEN');
 		badTokens[action] = newToken;
 		cookie.save('badTokens', badTokens, { path: '/' });
 		return;
 	}
+	
 	badTokens[action] = newToken;
+	if(ajaxLogging) document.badTokens = badTokens;
 	cookie.save('badTokens', badTokens, { path: '/' });
 	cookie.save('authHeaders', {
 		'access-token': newToken,
@@ -33,6 +42,7 @@ export function updateHeaders (xhr, action) {
 	if(ajaxLogging) console.log(newToken);
 }
 
+
 export function signup (form, callback) {
 	cookie.remove('batchTimer', { path: '/' });
 	ajax.post('/auth/', form, form).then( argumentArray => {
@@ -41,6 +51,7 @@ export function signup (form, callback) {
 		if (callback) callback();
 	}).catch( e => errorHandler(e) )
 }
+
 
 export function login (email, password, callback){
 	cookie.remove('batchTimer', { path: '/' });
@@ -52,12 +63,14 @@ export function login (email, password, callback){
 	}).catch( e => errorHandler(e) )
 }
 
+
 export function logout () {
 	const headers = cookie.load('authHeaders');
 	cookie.remove('authHeaders', { path: '/' });
 	cookie.remove('batchTimer', { path: '/' });
 	ajax.delete('/auth/sign_out', headers).catch( e => errorHandler(e) )
 }
+
 
 export function authenticate (authTokens, callback) {
 	const authHeaders = (authTokens) ? authTokens : cookie.load('authHeaders');
@@ -74,6 +87,7 @@ export function authenticate (authTokens, callback) {
 		callback({isSignedIn: false})
 	})
 }
+
 
 export function getAuthFromUrl() {
 	const parsedUrl = querystring.parse(window.location.href);

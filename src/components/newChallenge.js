@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 
-import {ReactComponent, routerType, renderLogging, stateTracker, updateReports, debugging} from '../../config';
+const {ReactComponent, routerType, renderLogging, updateReports} = window.GCCONF.client;
 import TextInput from './common/textInput';
 import CreateChallengers from './createChallengers';
 import AccountPage from './accountPage';
@@ -40,7 +40,7 @@ class NewChallenge extends ReactComponent {
 	}
 
 	componentWillUnmount () {
-		if(debugging) console.warn('NewChallenge component causes double render of ViewContainer when unmounting');
+		if(updateReports.update) console.warn('NewChallenge component causes double render of ViewContainer when unmounting');
 		this.props.saveChallenge(this.state)
 	}
 
