@@ -19,23 +19,27 @@ class CreateChallengers extends ReactComponent{
 		challengerWeight: is.oneOfType([is.string, is.number]),
 		asyncGetUsers: is.func.isRequired,
 		saveChallenge: is.func.isRequired,
-		participants: is.array
+		participants: is.array.isRequired
 	};
 
-	state = {
+	constructor(props) {
+		super();
+		const { name:savedName, email:savedEmail, weight:savedWeight, affiliation:savedAffiliation, rank:savedRank
+		} = props.participants[0] || {};
+		this.state = {
 			users: [],
-			challenger: this.props.participants[0] || {
-				...inputs2State(accountInputs),
-				name: this.props.challengerName || '',
-				email: this.props.challengerEmail || '',
-				weight: this.props.challengerWeight || '',
-				affiliation: this.props.challengerAffiliation || '',
-				rank: this.props.challengerRank || ''
+			challenger: {...inputs2State(accountInputs),
+				name: props.challengerName || savedName || '',
+				email: props.challengerEmail || savedEmail || '',
+				weight: props.challengerWeight || savedWeight || '',
+				affiliation: props.challengerAffiliation || savedAffiliation || '',
+				rank: props.challengerRank || savedRank || ''
 			},
-			opponent: this.props.participants[1] || {
+			opponent: props.participants[1] || {
 				id: '',
 				name: ''
 			}
+		}
 	}
 
 	componentDidMount () {
@@ -65,6 +69,7 @@ class CreateChallengers extends ReactComponent{
 	}
 
 	inputHandler (combatant, input, event) {
+		if (!window.onbeforeunload) window.onbeforeunload = e => e.returnValue;
 		const value = event.target.value;
 		const nextState = { ...this.state[combatant], [input]:value, errors:{} }
 		this.setState({ [combatant]: nextState });

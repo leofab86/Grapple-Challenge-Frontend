@@ -1,5 +1,5 @@
 import stateTrackerHOC from '../stateTracker/stateTrackerHOC';
-import updateReporterHOC from '../components/common/updateReporterHOC';
+import { updateReporterII, updateReporterPP } from '../components/common/updateReporterHOC';
 import { stateTracker, updateReports } from '../../config'
 
 export default function(baseComponent, HOCarray) {
@@ -10,7 +10,8 @@ export default function(baseComponent, HOCarray) {
 		//ADD IMPORTED HOCs into HOCbox below
 		const HOCbox = {
 			stateTrackerHOC: (stateTracker) ? stateTrackerHOC : null,
-			updateReporterHOC: (updateReports.update || updateReports.pass) ? updateReporterHOC : null,
+			updateReporterHOC: (updateReports.update || updateReports.pass) ? updateReporterII : null,
+			updateReporterPP: (updateReports.update || updateReports.pass) ? updateReporterPP : null
 		}
 
 

@@ -8,6 +8,7 @@ module.exports = function (WrappedComponent) {
 
 		componentDidMount() {
 			if (super.componentDidMount) super.componentDidMount();
+
 			exportInternalState.updateProps(this, this.props);
 			if(this.state) exportInternalState.updateState(this, this.state);
 			exportInternalState.emit();
@@ -16,8 +17,7 @@ module.exports = function (WrappedComponent) {
 		componentWillUnmount() {
 			if (super.componentWillUnmount) super.componentWillUnmount();
 
-			exportInternalState.unmount(this);
-			
+			exportInternalState.unmount(this);	
 		}
 
 		componentDidUpdate() {

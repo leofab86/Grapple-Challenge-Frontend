@@ -5,20 +5,24 @@ import { ajaxLogging } from '../../config';
 import ajax from '../helpers/ajax';
 import { toastrMsg, errorHandler } from '../helpers/appHelpers';
 
-document.badTokens = [];
-
-export function updateHeaders (xhr) {
+export function updateHeaders (xhr, action) {
 	const newToken = xhr.getResponseHeader('access-token');
 	if (newToken === null) return;
-	if(document.badTokens.some(badToken => newToken == badToken)) {
-		if(ajaxLogging) console.log('BAD TOKEN!');
-		return cookie.save('batchTimer', {}, { path: '/', maxAge: 5 });
+	let badTokens = cookie.load('badTokens');
+	if (!badTokens) {
+		if(ajaxLogging) console.log('FIRST TIME, STARTING BATCH TIMER');
+		cookie.save('batchTimer', {}, { path: '/', maxAge: 5 });
+		badTokens = {};
+	} else if (badTokens[action] == newToken) {
+		if(ajaxLogging) console.log('BAD TOKEN!'); return;
+	} else if (cookie.load('batchTimer')) {
+		console.log('BATCH TIMER, SAVING BAD TOKEN');
+		badTokens[action] = newToken;
+		cookie.save('badTokens', badTokens, { path: '/' });
+		return;
 	}
-	if(cookie.load('batchTimer')) {
-		if(ajaxLogging) console.log('BATCH TIMER, PUSH BAD TOKEN');
-		document.badTokens.push(newToken);
-		return cookie.save('batchTimer', {}, { path: '/', maxAge: 5 });
-	}
+	badTokens[action] = newToken;
+	cookie.save('badTokens', badTokens, { path: '/' });
 	cookie.save('authHeaders', {
 		'access-token': newToken,
 		client: xhr.getResponseHeader('client'),
@@ -27,13 +31,10 @@ export function updateHeaders (xhr) {
 		'token-type': xhr.getResponseHeader('token-type')
 	}, { path: '/' });
 	if(ajaxLogging) console.log(newToken);
-	document.badTokens = [];
-	cookie.save('batchTimer', {}, { path: '/', maxAge: 5 });
 }
 
 export function signup (form, callback) {
 	cookie.remove('batchTimer', { path: '/' });
-	document.badTokens = [];
 	ajax.post('/auth/', form, form).then( argumentArray => {
 		const email = argumentArray[0].data.email;
 		toastrMsg('success', `An email confirmation has been sent to ${email}`);
@@ -43,11 +44,10 @@ export function signup (form, callback) {
 
 export function login (email, password, callback){
 	cookie.remove('batchTimer', { path: '/' });
-	document.badTokens = [];
 	ajax.post('/auth/sign_in', {email, password}).then( argumentArray => {
 		const xhr = argumentArray[2];
 		const user = {...argumentArray[0].data, isSignedIn: true};
-		updateHeaders(xhr);
+		updateHeaders(xhr, 'login');
 		if (callback) callback(user);
 	}).catch( e => errorHandler(e) )
 }
@@ -56,7 +56,6 @@ export function logout () {
 	const headers = cookie.load('authHeaders');
 	cookie.remove('authHeaders', { path: '/' });
 	cookie.remove('batchTimer', { path: '/' });
-	document.badTokens = [];
 	ajax.delete('/auth/sign_out', headers).catch( e => errorHandler(e) )
 }
 
@@ -67,7 +66,7 @@ export function authenticate (authTokens, callback) {
 	.then( argumentArray => {
 		const xhr = argumentArray[2];
 		const user = {...argumentArray[0].data, isSignedIn: true};
-		updateHeaders(xhr);
+		updateHeaders(xhr, 'authenticate');
 		callback(user)
 	}).catch( e => {
 		console.error(e);

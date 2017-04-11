@@ -2,11 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import * as AppActions from '../actions/reduxActions';
-import {ReactComponent, renderLogging, stateTracker, updateReports} from '../../config';
+const {ReactComponent, renderLogging, stateTracker, updateReports} = document.devConfig;
 import Header from '../components/header';
 import GlobalPopup from '../components/globalPopup';
 import StateTracker from '../stateTracker/stateTracker';
-import NewChallenge from '../components//NewChallenge';
 import chainHOC from '../helpers/chainHOC';
 
 
@@ -36,44 +35,35 @@ class ViewContainer extends ReactComponent{
 
 		const { globalPopup, auth, savedChallenge, matches } = this.props.appState;
 		const { email, name, isSignedIn, id, affiliation, rank, weight} = auth;
-		const Child = this.props.children.type;
 		const urlAccount = this.props.children.props.params.account;
 		const urlMatchId = this.props.children.props.params.matchId;
 		const publicMatch = matches[urlMatchId];
-		let props;
+		
+		const Child = this.props.children.type;
+		const childName = Child.displayName || Child.name;
 
-		switch( Child.displayName || Child.name ){
-			case 'AccountPage':
-				props = {
-					email, name, isSignedIn, urlAccount,
-					asyncLogin, asyncLogout, asyncSignup
-				};
-				break;
-			case 'NewChallenge':
-				props = {
-					...savedChallenge, name, id, isSignedIn, email, affiliation, rank, weight,
-					newPopup, closePopup, saveChallenge, resetChallenge, asyncSaveChallenge, asyncGetUsers
-				};
-				break;
-			case 'HomePage':
-				props = {matches}
-				break;
-			case 'Challenge':
-				props = {
-					...savedChallenge, urlMatchId, publicMatch
-				}
-				break;
-			case 'EditChallenge':
-				props = {urlMatchId, ...publicMatch, asyncEditMatch};
-				break;
-			case 'Test':
-				props = {urlMatchId, asyncEditMatch}
-				break;
-			case 'ReduxContainer':
-				props = {id}
-				break;
-			default:
-				//no op
+		const props = {
+			AccountPage: {
+				urlAccount, email, name, isSignedIn, asyncLogin, asyncLogout, asyncSignup
+			},
+			NewChallenge: {
+				...savedChallenge, ...auth, 
+				newPopup, closePopup, saveChallenge, resetChallenge, asyncSaveChallenge, asyncGetUsers
+			},
+			HomePage: {
+				matches
+			},
+			Challenge: {
+				urlMatchId, publicMatch, ...savedChallenge
+			},
+			EditChallenge: {
+				urlMatchId, ...publicMatch, asyncEditMatch
+			},
+			Test: {
+				urlMatchId: this.props.children.props.params.matchId,
+				asyncEditMatch
+			},
+			ReduxContainer: {id}
 		}
 
 		return (
@@ -81,7 +71,7 @@ class ViewContainer extends ReactComponent{
 				{ (stateTracker) ? <StateTracker appState={{...this.props.appState}}/> : null }
 				<Header {...{email, name, isSignedIn, asyncLogout, newPopup, closePopup}}/>
 				<div className='container'>
-					<Child {...props}/>
+					<Child {...props[childName]}/>
 				</div>
 				<GlobalPopup {...{...globalPopup, closePopup, asyncSignup, asyncLogin}}/>
 				
@@ -90,12 +80,10 @@ class ViewContainer extends ReactComponent{
 	}
 }
 
-const ViewContainer_HOC = chainHOC(ViewContainer, ['stateTrackerHOC', 'updateReporterHOC']);
-
 const MainContainer = connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ViewContainer_HOC)
+)(chainHOC(ViewContainer, ['stateTrackerHOC', 'updateReporterHOC']))
 
 MainContainer.displayName = 'MainContainer';
 

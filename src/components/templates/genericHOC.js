@@ -2,7 +2,7 @@ import React from 'react';
 
 //----------------------Inverse Inheritance: When need to access state---------------------------------
 
-module.exports = function (WrappedComponent) {
+export function II (WrappedComponent) {
 
 	class genHOC extends WrappedComponent {
 		
@@ -26,7 +26,7 @@ module.exports = function (WrappedComponent) {
 
 //-----------------------Props Proxy: When no state necessary, put these at the end of the HOC chain---------------
 
-module.exports = function (WrappedComponent) {
+export function PP (WrappedComponent) {
 
 	class genHOC extends React.PureComponent {
 		

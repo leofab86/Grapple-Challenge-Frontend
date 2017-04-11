@@ -9,8 +9,8 @@ function generateMethod (type) {
 				type,
 				headers,
 				data,
-				success: function () {
-					if(ajaxLogging) console.log(arguments, arguments[2].getResponseHeader('access-token'));
+				success: function (a, b, xhr) {
+					if(ajaxLogging) console.log(arguments, xhr.getResponseHeader('access-token'));
 					success(arguments);
 				},
 				error: function(e) {

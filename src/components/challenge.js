@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 import {ReactComponent, routerType, stateTracker, renderLogging, updateReports} from '../../config';
-//import chainHOC from '../helpers/chainHOC';
+import chainHOC from '../helpers/chainHOC';
 
 
 Challenge.propTypes = {
@@ -52,7 +52,7 @@ function Challenge (props) {
 	
 }
 
-export default Challenge;
+export default chainHOC(Challenge, ['updateReporterPP']);
 
 
 

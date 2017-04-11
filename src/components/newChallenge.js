@@ -1,6 +1,6 @@
 import React, { PropTypes as is } from 'react';
 
-import {ReactComponent, routerType, renderLogging, stateTracker, updateReports} from '../../config';
+import {ReactComponent, routerType, renderLogging, stateTracker, updateReports, debugging} from '../../config';
 import TextInput from './common/textInput';
 import CreateChallengers from './createChallengers';
 import AccountPage from './accountPage';
@@ -40,10 +40,12 @@ class NewChallenge extends ReactComponent {
 	}
 
 	componentWillUnmount () {
+		if(debugging) console.warn('NewChallenge component causes double render of ViewContainer when unmounting');
 		this.props.saveChallenge(this.state)
 	}
 
 	inputHandler = (event) => {
+		if (!window.onbeforeunload) window.onbeforeunload = e => e.returnValue;
 		const { name, value } = event.target;
 		this.setState({[name]:value});
 	}
